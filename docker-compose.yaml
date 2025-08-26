@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nvim:
+    build: .
+    container_name: nvim
+    ports:
+      - 8080:8080
+    volumes:
+      # Here link the folder you want to edit from this text editor
+      - "./code:/root/code"
+    environment:
+      - GOTTY_CREDENTIAL=${GOTTY_CREDENTIAL}
+      - GOTTY_PORT=8080
+
