@@ -48,7 +48,7 @@ permit-arguments = false
 close-signal = "SIGHUP"
 close-timeout = 5
 preferences {
-    font_size = 25
+    font_size = 18
     background_color = "rgb(16, 16, 32)"
 }
 EOF
