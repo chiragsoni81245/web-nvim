@@ -28,8 +28,6 @@ RUN mkdir -p /root/.local/share && \
 
 # Install mise
 RUN curl https://mise.run | sh && \
-    eval "\$(/root/.local/bin/mise activate bash)" && \
-    mise use -g usage && \
     mkdir -p ~/.local/share/bash-completion/ && \
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
@@ -39,6 +37,8 @@ usage = "latest"
 python = 'latest'
 go = 'latest'
 EOF
+
+RUN /root/.local/bin/mise install
 
 # Gotty setup
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
