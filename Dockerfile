@@ -28,7 +28,7 @@ RUN mkdir -p /root/.local/share && \
 
 # Install mise
 RUN curl https://mise.run | sh && \
-    eval "$(/root/.local/bin/mise activate bash)" && \
+    eval "\$(/root/.local/bin/mise activate bash)" && \
     mise use -g usage && \
     mkdir -p ~/.local/share/bash-completion/ && \
     mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
