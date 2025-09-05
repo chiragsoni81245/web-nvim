@@ -40,7 +40,7 @@ EOF
 RUN /root/.local/bin/mise install && \
     mkdir -p ~/.local/share/bash-completion/ && \
     mkdir -p /root/.local/share/bash-completion/completions && \
-    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    /root/.local/bin/mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
 # Gotty setup
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
