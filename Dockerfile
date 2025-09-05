@@ -27,10 +27,7 @@ RUN mkdir -p /root/.local/share && \
     rm /root/nvim.sh
 
 # Install mise
-RUN curl https://mise.run | sh && \
-    mkdir -p ~/.local/share/bash-completion/ && \
-    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
-
+RUN curl https://mise.run | sh
 RUN cat <<'EOF' >> /root/.config/mise/config.toml
 [tools]
 usage = "latest"
@@ -38,7 +35,9 @@ python = 'latest'
 go = 'latest'
 EOF
 
-RUN /root/.local/bin/mise install
+RUN /root/.local/bin/mise install && \
+    mkdir -p ~/.local/share/bash-completion/ && \
+    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
 # Gotty setup
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
