@@ -27,8 +27,10 @@ RUN mkdir -p /root/.local/share && \
     rm /root/nvim.sh
 
 # Install mise
-RUN curl https://mise.run | sh
-RUN cat <<'EOF' > /root/.config/mise/config.toml
+RUN curl https://mise.run | sh && \
+    mkdir -p /root/.config/mise && \
+    touch /root/.config/mise/config.toml && \
+    cat <<'EOF' > /root/.config/mise/config.toml
 [tools]
 usage = "latest"
 python = 'latest'
