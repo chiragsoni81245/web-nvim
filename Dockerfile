@@ -28,7 +28,7 @@ RUN mkdir -p /root/.local/share && \
 
 # Install mise
 RUN curl https://mise.run | sh
-RUN cat <<'EOF' >> /root/.config/mise/config.toml
+RUN cat <<'EOF' > /root/.config/mise/config.toml
 [tools]
 usage = "latest"
 python = 'latest'
@@ -45,7 +45,7 @@ RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_
     mv /root/gotty /usr/local/bin/gotty && \
     rm /root/gotty_linux_amd64.tar.gz
 
-RUN cat <<'EOF' >> /root/.gotty
+RUN cat <<'EOF' > /root/.gotty
 address = "0.0.0.0"
 port = "8080"
 random-url = true
