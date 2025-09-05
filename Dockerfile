@@ -26,6 +26,20 @@ RUN mkdir -p /root/.local/share && \
     /bin/bash /root/nvim.sh && \
     rm /root/nvim.sh
 
+# Install mise
+RUN curl https://mise.run | sh && \
+    eval "$(/root/.local/bin/mise activate bash)" && \
+    mise use -g usage && \
+    mkdir -p ~/.local/share/bash-completion/ && \
+    mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+
+RUN cat <<'EOF' >> /root/.config/mise/config.toml
+[tools]
+usage = "latest"
+python = 'latest'
+go = 'latest'
+EOF
+
 # Gotty setup
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
     tar -xvf /root/gotty_linux_amd64.tar.gz -C /root && \
@@ -65,9 +79,13 @@ PS1="\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\[\e[35m\]\$(branch=\$(git sy
 
 alias vim="nvim";
 bind '"\C-f": "/usr/local/bin/tmux-sessionizer\n"'
+
+# For mise setup
+eval "$(/root/.local/bin/mise activate bash)"
 EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
+ENV PATH="${PATH}:/usr/local/go/bin"
 
 WORKDIR /root/code
 
