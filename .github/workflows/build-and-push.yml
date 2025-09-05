@@ -1,9 +1,12 @@
 name: Build and Push Docker Image
 
 on:
-  push:
-    tags:
-      - 'v*'   # Run when pushing tags starting with v (e.g., v1.0.0)
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag (e.g. v1.0.0, latest)'
+        required: true
+        default: latest
 
 jobs:
   docker:
@@ -34,5 +37,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            chiragsoni812/web-nvim:latest
+            chiragsoni812/web-nvim:${{ github.event.inputs.image_tag }}
