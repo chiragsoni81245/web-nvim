@@ -9,7 +9,7 @@ RUN mkdir -p /root/code
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
         git wget curl unzip zip tar \
-        python3-venv && \
+        python3-venv \
         lsb-release software-properties-common gnupg
 
 
