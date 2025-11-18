@@ -141,15 +141,15 @@ bind '"\C-f": "/usr/local/bin/tmux-sessionizer\n"'
 
 # For mise setup
 eval "$(/root/.local/bin/mise activate bash)"
-EOF
-
-ENV PATH="/opt/nvim/bin:${PATH}"
-ENV PATH="${PATH}:/usr/local/go/bin"
 
 # C++ setup things
 export PATH=/opt/cmake-3.31.6/bin:$PATH
 export VCPKG_ROOT=~/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
+EOF
+
+ENV PATH="/opt/nvim/bin:${PATH}"
+ENV PATH="${PATH}:/usr/local/go/bin"
 
 WORKDIR /root/code
 
