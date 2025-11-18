@@ -3,11 +3,57 @@ FROM ubuntu:latest
 WORKDIR /root
 RUN mkdir -p /root/code
 
-# Install base packages
+#### -------------------------------------
+#### Install base packages
+#### -------------------------------------
 RUN apt update && \
-    apt install -y git wget curl gcc g++
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+        git wget curl unzip zip tar \
+        lsb-release software-properties-common gnupg
 
-# Install and configure tmux
+
+#### -------------------------------------
+#### Install and Configure C++
+#### -------------------------------------
+# Install Clang Compiler
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 19 all && \
+    rm llvm.sh && \
+    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && \
+    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 && \
+    update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-19 100 && \
+    update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-19 100 && \
+    update-alternatives --install /usr/bin/lld lld /usr/bin/lld-19 100 && \
+    update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
+
+# Install Cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v4.2.0-rc4/cmake-4.2.0-rc4-linux-x86_64.sh && \
+    chmod +x cmake-4.2.0-rc4-linux-x86_64.sh && \
+    mkdir -p /opt/cmake-4.2.0 && \
+    ./cmake-4.2.0-rc4-linux-x86_64.sh --prefix=/opt/cmake-4.2.0 --skip-license && \
+    rm cmake-4.2.0-rc4-linux-x86_64.sh &&\
+    update-alternatives --install /usr/bin/cmake cmake /opt/cmake-4.2.0/bin/cmake 100 && \
+    update-alternatives --install /usr/bin/ctest ctest /opt/cmake-4.2.0/bin/ctest 100 && \
+    update-alternatives --install /usr/bin/cpack cpack /opt/cmake-4.2.0/bin/cpack 100
+
+# Install Ninja Build System
+RUN wget https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-linux.zip && \
+    unzip ninja-linux.zip && \
+    mv ninja /usr/bin/ninja && \
+    chmod +x /usr/bin/ninja && \
+    rm ninja-linux.zip
+
+# Install vcpkg for package management in C++
+RUN cd ~ && \
+    git clone https://github.com/microsoft/vcpkg.git && \
+    cd vcpkg && \
+    ./bootstrap-vcpkg.sh
+
+
+#### -------------------------------------
+#### Install and configure tmux
+#### -------------------------------------
 RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/tmux.sh -o /root/tmux.sh && \
     sed -i 's/sudo //' /root/tmux.sh && \
     chmod +x /root/tmux.sh && \
@@ -18,7 +64,9 @@ RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads
     chmod +x /usr/local/bin/tmux-sessionizer
 
 
-# Install and configure nvim
+#### -------------------------------------
+#### Install and configure nvim
+#### -------------------------------------
 RUN mkdir -p /root/.local/share && \
     curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/nvim.sh -o /root/nvim.sh && \
     sed -i 's/sudo //' /root/nvim.sh && \
@@ -26,7 +74,10 @@ RUN mkdir -p /root/.local/share && \
     /bin/bash /root/nvim.sh && \
     rm /root/nvim.sh
 
-# Install mise
+
+#### -------------------------------------
+#### Install mise
+#### -------------------------------------
 RUN curl https://mise.run | sh && \
     mkdir -p /root/.config/mise && \
     touch /root/.config/mise/config.toml && \
@@ -42,7 +93,10 @@ RUN /root/.local/bin/mise install && \
     mkdir -p /root/.local/share/bash-completion/completions && \
     /root/.local/bin/mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
-# Gotty setup
+
+#### -------------------------------------
+#### Gotty setup
+#### -------------------------------------
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
     tar -xvf /root/gotty_linux_amd64.tar.gz -C /root && \
     mv /root/gotty /usr/local/bin/gotty && \
@@ -70,7 +124,10 @@ preferences {
 EOF
 ENV TERM=xterm-256color
 
-# Configure bashrc
+
+#### -------------------------------------
+#### Configure bashrc
+#### -------------------------------------
 RUN cat <<'EOF' >> /root/.bashrc
 # Technicolor dreams
 force_color_prompt=yes
@@ -88,6 +145,11 @@ EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
 ENV PATH="${PATH}:/usr/local/go/bin"
+
+# C++ setup things
+export PATH=/opt/cmake-3.31.6/bin:$PATH
+export VCPKG_ROOT=~/vcpkg
+export PATH=$VCPKG_ROOT:$PATH
 
 WORKDIR /root/code
 
