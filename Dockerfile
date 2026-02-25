@@ -10,10 +10,8 @@ RUN apt update && \
         lsb-release software-properties-common gnupg
 
 
-# Create fixed non-root user
-RUN groupadd -g 1000 ubuntu && \
-    useradd -m -u 1000 -g 1000 -s /bin/bash ubuntu && \
-    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# Add ubuntu user in sudoers
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER ubuntu
 WORKDIR /home/ubuntu
