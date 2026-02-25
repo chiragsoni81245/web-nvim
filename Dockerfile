@@ -90,9 +90,9 @@ go = 'latest'
 EOF
 
 RUN ./.local/bin/mise install && \
-    mkdir -p ~/.local/share/bash-completion/ && \
+    mkdir -p ./.local/share/bash-completion/ && \
     mkdir -p ./.local/share/bash-completion/completions && \
-    ./.local/bin/mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    ./.local/bin/mise completion bash --include-bash-completion-lib > ./.local/share/bash-completion/completions/mise
 
 
 #### -------------------------------------
