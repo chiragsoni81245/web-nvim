@@ -77,6 +77,9 @@ RUN mkdir -p ./.local/share && \
     rm ./nvim.sh
 
 
+# Mise needs to be installed with user ubuntu as it creates some files and those needs to be owned via user ubuntu 
+USER ubuntu
+
 #### -------------------------------------
 #### Install mise
 #### -------------------------------------
