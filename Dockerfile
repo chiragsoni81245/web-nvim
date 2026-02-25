@@ -1,5 +1,9 @@
 FROM ubuntu:latest
 
+WORKDIR /home/ubuntu
+ENV HOME=/home/ubuntu
+RUN mkdir -p ./code
+
 #### -------------------------------------
 #### Install base packages
 #### -------------------------------------
@@ -47,12 +51,6 @@ RUN cd ~ && \
     git clone https://github.com/microsoft/vcpkg.git && \
     cd vcpkg && \
     ./bootstrap-vcpkg.sh
-
-
-WORKDIR /home/ubuntu
-ENV HOME=/home/ubuntu
-RUN mkdir -p ./code
-USER ubuntu
 
 
 #### -------------------------------------
