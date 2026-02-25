@@ -10,11 +10,6 @@ RUN apt update && \
         lsb-release software-properties-common gnupg
 
 
-WORKDIR /home/ubuntu
-ENV HOME=/home/ubuntu
-RUN mkdir -p ./code
-USER ubuntu
-
 #### -------------------------------------
 #### Install and Configure C++
 #### -------------------------------------
@@ -29,6 +24,11 @@ RUN wget https://apt.llvm.org/llvm.sh && \
     update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-19 100 && \
     update-alternatives --install /usr/bin/lld lld /usr/bin/lld-19 100 && \
     update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
+
+WORKDIR /home/ubuntu
+ENV HOME=/home/ubuntu
+RUN mkdir -p ./code
+USER ubuntu
 
 # Install Cmake
 RUN wget https://github.com/Kitware/CMake/releases/download/v4.2.0-rc4/cmake-4.2.0-rc4-linux-x86_64.sh && \
