@@ -1,9 +1,5 @@
 FROM ubuntu:latest
 
-WORKDIR /home/ubuntu
-ENV HOME=/home/ubuntu
-RUN mkdir -p ./code
-
 #### -------------------------------------
 #### Install base packages
 #### -------------------------------------
@@ -14,56 +10,65 @@ RUN apt update && \
         lsb-release software-properties-common gnupg
 
 
+# Create fixed non-root user
+RUN groupadd -g 1000 ubuntu && \
+    useradd -m -u 1000 -g 1000 -s /bin/bash ubuntu && \
+    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+USER ubuntu
+WORKDIR /home/ubuntu
+ENV HOME=/home/ubuntu
+RUN mkdir -p ./code
+
 #### -------------------------------------
 #### Install and Configure C++
 #### -------------------------------------
 # Install Clang Compiler
 RUN wget https://apt.llvm.org/llvm.sh && \
-    chmod +x llvm.sh && \
-    ./llvm.sh 19 all && \
+    sudo chmod +x llvm.sh && \
+    sudo ./llvm.sh 19 all && \
     rm llvm.sh && \
-    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && \
-    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 && \
-    update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-19 100 && \
-    update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-19 100 && \
-    update-alternatives --install /usr/bin/lld lld /usr/bin/lld-19 100 && \
-    update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
+    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && \
+    sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 && \
+    sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-19 100 && \
+    sudo update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-19 100 && \
+    sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-19 100 && \
+    sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 100
 
 # Install Cmake
 RUN wget https://github.com/Kitware/CMake/releases/download/v4.2.0-rc4/cmake-4.2.0-rc4-linux-x86_64.sh && \
-    chmod +x cmake-4.2.0-rc4-linux-x86_64.sh && \
-    mkdir -p /opt/cmake-4.2.0 && \
-    ./cmake-4.2.0-rc4-linux-x86_64.sh --prefix=/opt/cmake-4.2.0 --skip-license && \
+    sudo chmod +x cmake-4.2.0-rc4-linux-x86_64.sh && \
+    sudo mkdir -p /opt/cmake-4.2.0 && \
+    sudo ./cmake-4.2.0-rc4-linux-x86_64.sh --prefix=/opt/cmake-4.2.0 --skip-license && \
     rm cmake-4.2.0-rc4-linux-x86_64.sh &&\
-    update-alternatives --install /usr/bin/cmake cmake /opt/cmake-4.2.0/bin/cmake 100 && \
-    update-alternatives --install /usr/bin/ctest ctest /opt/cmake-4.2.0/bin/ctest 100 && \
-    update-alternatives --install /usr/bin/cpack cpack /opt/cmake-4.2.0/bin/cpack 100
+    sudo update-alternatives --install /usr/bin/cmake cmake /opt/cmake-4.2.0/bin/cmake 100 && \
+    sudo update-alternatives --install /usr/bin/ctest ctest /opt/cmake-4.2.0/bin/ctest 100 && \
+    sudo update-alternatives --install /usr/bin/cpack cpack /opt/cmake-4.2.0/bin/cpack 100
 
 # Install Ninja Build System
 RUN wget https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-linux.zip && \
     unzip ninja-linux.zip && \
-    mv ninja /usr/bin/ninja && \
-    chmod +x /usr/bin/ninja && \
+    sudo mv ninja /usr/bin/ninja && \
+    sudo chmod +x /usr/bin/ninja && \
     rm ninja-linux.zip
 
 # Install vcpkg for package management in C++
 RUN cd ~ && \
     git clone https://github.com/microsoft/vcpkg.git && \
     cd vcpkg && \
-    ./bootstrap-vcpkg.sh
+    sudo ./bootstrap-vcpkg.sh
 
 
 #### -------------------------------------
 #### Install and configure tmux
 #### -------------------------------------
 RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/tmux.sh -o ./tmux.sh && \
-    sed -i 's/sudo //' ./tmux.sh && \
-    chmod +x ./tmux.sh && \
+    sudo chmod +x ./tmux.sh && \
     /bin/bash ./tmux.sh && \
     rm ./tmux.sh && \
-    curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/bin/tmux-sessionizer -o /usr/local/bin/tmux-sessionizer && \
-    sed -i 's/\~\/Documents/\/root\/code/' /usr/local/bin/tmux-sessionizer && \
-    chmod +x /usr/local/bin/tmux-sessionizer
+    sudo curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/bin/tmux-sessionizer -o /usr/local/bin/tmux-sessionizer && \
+    sudo sed -i 's/\~\/Documents/\/home\/ubuntu\/code/' /usr/local/bin/tmux-sessionizer && \
+    sudo chmod +x /usr/local/bin/tmux-sessionizer
 
 
 #### -------------------------------------
@@ -71,14 +76,10 @@ RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads
 #### -------------------------------------
 RUN mkdir -p ./.local/share && \
     curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/nvim.sh -o ./nvim.sh && \
-    sed -i 's/sudo //' ./nvim.sh && \
-    chmod +x ./nvim.sh && \
+    sudo chmod +x ./nvim.sh && \
     /bin/bash ./nvim.sh && \
     rm ./nvim.sh
 
-
-# Mise needs to be installed with user ubuntu as it creates some files and those needs to be owned via user ubuntu 
-USER ubuntu
 
 #### -------------------------------------
 #### Install mise
@@ -104,7 +105,7 @@ RUN ./.local/bin/mise install && \
 #### -------------------------------------
 RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O ./gotty_linux_amd64.tar.gz && \
     tar -xvf ./gotty_linux_amd64.tar.gz -C ./ && \
-    mv ./gotty /usr/local/bin/gotty && \
+    sudo mv ./gotty /usr/local/bin/gotty && \
     rm ./gotty_linux_amd64.tar.gz
 
 RUN cat <<'EOF' > ./.gotty
@@ -155,8 +156,6 @@ EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
 ENV PATH="${PATH}:/usr/local/go/bin"
-
-WORKDIR /home/ubuntu/
 
 EXPOSE 8080
 CMD ["/usr/local/bin/gotty", "-w", "tmux", "new", "-A", "-s", "gotty", "/bin/bash"]
