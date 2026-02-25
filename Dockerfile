@@ -3,6 +3,7 @@ FROM ubuntu:latest
 WORKDIR /home/ubuntu
 ENV HOME=/home/ubuntu
 RUN mkdir -p ./code
+USER ubuntu
 
 
 #### -------------------------------------
@@ -154,7 +155,7 @@ EOF
 ENV PATH="/opt/nvim/bin:${PATH}"
 ENV PATH="${PATH}:/usr/local/go/bin"
 
-WORKDIR ~/
+WORKDIR /home/ubuntu/
 
 EXPOSE 8080
 CMD ["/usr/local/bin/gotty", "-w", "tmux", "new", "-A", "-s", "gotty", "/bin/bash"]
