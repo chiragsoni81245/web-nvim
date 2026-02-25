@@ -1,11 +1,5 @@
 FROM ubuntu:latest
 
-WORKDIR /home/ubuntu
-ENV HOME=/home/ubuntu
-RUN mkdir -p ./code
-USER ubuntu
-
-
 #### -------------------------------------
 #### Install base packages
 #### -------------------------------------
@@ -15,6 +9,11 @@ RUN apt update && \
         python3-venv \
         lsb-release software-properties-common gnupg
 
+
+WORKDIR /home/ubuntu
+ENV HOME=/home/ubuntu
+RUN mkdir -p ./code
+USER ubuntu
 
 #### -------------------------------------
 #### Install and Configure C++
