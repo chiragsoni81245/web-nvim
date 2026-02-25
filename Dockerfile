@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
-WORKDIR /root
-RUN mkdir -p /root/code
+WORKDIR /home/ubuntu
+RUN mkdir -p ./code
 
 #### -------------------------------------
 #### Install base packages
@@ -55,11 +55,11 @@ RUN cd ~ && \
 #### -------------------------------------
 #### Install and configure tmux
 #### -------------------------------------
-RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/tmux.sh -o /root/tmux.sh && \
-    sed -i 's/sudo //' /root/tmux.sh && \
-    chmod +x /root/tmux.sh && \
-    /bin/bash /root/tmux.sh && \
-    rm /root/tmux.sh && \
+RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/tmux.sh -o ./tmux.sh && \
+    sed -i 's/sudo //' ./tmux.sh && \
+    chmod +x ./tmux.sh && \
+    /bin/bash ./tmux.sh && \
+    rm ./tmux.sh && \
     curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/bin/tmux-sessionizer -o /usr/local/bin/tmux-sessionizer && \
     sed -i 's/\~\/Documents/\/root\/code/' /usr/local/bin/tmux-sessionizer && \
     chmod +x /usr/local/bin/tmux-sessionizer
@@ -68,42 +68,42 @@ RUN curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads
 #### -------------------------------------
 #### Install and configure nvim
 #### -------------------------------------
-RUN mkdir -p /root/.local/share && \
-    curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/nvim.sh -o /root/nvim.sh && \
-    sed -i 's/sudo //' /root/nvim.sh && \
-    chmod +x /root/nvim.sh && \
-    /bin/bash /root/nvim.sh && \
-    rm /root/nvim.sh
+RUN mkdir -p ./.local/share && \
+    curl -s https://raw.githubusercontent.com/chiragsoni81245/homelab/refs/heads/main/install/tools/nvim.sh -o ./nvim.sh && \
+    sed -i 's/sudo //' ./nvim.sh && \
+    chmod +x ./nvim.sh && \
+    /bin/bash ./nvim.sh && \
+    rm ./nvim.sh
 
 
 #### -------------------------------------
 #### Install mise
 #### -------------------------------------
 RUN curl https://mise.run | sh && \
-    mkdir -p /root/.config/mise && \
-    touch /root/.config/mise/config.toml && \
-    cat <<'EOF' > /root/.config/mise/config.toml
+    mkdir -p ./.config/mise && \
+    touch ./.config/mise/config.toml && \
+    cat <<'EOF' > ./.config/mise/config.toml
 [tools]
 usage = "latest"
 python = 'latest'
 go = 'latest'
 EOF
 
-RUN /root/.local/bin/mise install && \
+RUN ./.local/bin/mise install && \
     mkdir -p ~/.local/share/bash-completion/ && \
-    mkdir -p /root/.local/share/bash-completion/completions && \
-    /root/.local/bin/mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
+    mkdir -p ./.local/share/bash-completion/completions && \
+    ./.local/bin/mise completion bash --include-bash-completion-lib > ~/.local/share/bash-completion/completions/mise
 
 
 #### -------------------------------------
 #### Gotty setup
 #### -------------------------------------
-RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O /root/gotty_linux_amd64.tar.gz && \
-    tar -xvf /root/gotty_linux_amd64.tar.gz -C /root && \
-    mv /root/gotty /usr/local/bin/gotty && \
-    rm /root/gotty_linux_amd64.tar.gz
+RUN wget -q https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz -O ./gotty_linux_amd64.tar.gz && \
+    tar -xvf ./gotty_linux_amd64.tar.gz -C ./ && \
+    mv ./gotty /usr/local/bin/gotty && \
+    rm ./gotty_linux_amd64.tar.gz
 
-RUN cat <<'EOF' > /root/.gotty
+RUN cat <<'EOF' > ./.gotty
 address = "0.0.0.0"
 port = "8080"
 random-url = true
@@ -129,7 +129,7 @@ ENV TERM=xterm-256color
 #### -------------------------------------
 #### Configure bashrc
 #### -------------------------------------
-RUN cat <<'EOF' >> /root/.bashrc
+RUN cat <<'EOF' >> ./.bashrc
 # Technicolor dreams
 force_color_prompt=yes
 color_prompt=yes
@@ -141,7 +141,7 @@ alias vim="nvim";
 bind '"\C-f": "/usr/local/bin/tmux-sessionizer\n"'
 
 # For mise setup
-eval "$(/root/.local/bin/mise activate bash)"
+eval "$(~/.local/bin/mise activate bash)"
 
 # C++ setup things
 export PATH=/opt/cmake-3.31.6/bin:$PATH
@@ -152,7 +152,7 @@ EOF
 ENV PATH="/opt/nvim/bin:${PATH}"
 ENV PATH="${PATH}:/usr/local/go/bin"
 
-WORKDIR /root/code
+WORKDIR ~/
 
 EXPOSE 8080
 CMD ["/usr/local/bin/gotty", "-w", "tmux", "new", "-A", "-s", "gotty", "/bin/bash"]
