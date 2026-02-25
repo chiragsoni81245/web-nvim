@@ -1,7 +1,10 @@
 FROM ubuntu:latest
 
 WORKDIR /home/ubuntu
+USER ubuntu
+ENV HOME /home/ubuntu
 RUN mkdir -p ./code
+
 
 #### -------------------------------------
 #### Install base packages
