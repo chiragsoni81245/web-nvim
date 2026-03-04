@@ -82,6 +82,7 @@ RUN mkdir -p ./.local/share && \
 #### -------------------------------------
 #### Install mise
 #### -------------------------------------
+RUN sudo apt install zstd -y
 RUN curl https://mise.run | sh && \
     mkdir -p ./.config/mise && \
     touch ./.config/mise/config.toml && \
