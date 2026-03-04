@@ -5,7 +5,7 @@ FROM ubuntu:latest
 #### -------------------------------------
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
-        git wget sudo curl unzip zip tar \
+        git wget sudo curl unzip zip tar make tree \
         python3-venv \
         lsb-release software-properties-common gnupg
 
