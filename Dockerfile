@@ -154,7 +154,7 @@ force_color_prompt=yes
 color_prompt=yes
 
 # Simple prompt with path in the window/pane title and caret for typing line
-PS1="\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\[\e[35m\]\$(branch=\$(git symbolic-ref --short HEAD 2>/dev/null); [ -n \"\$branch\" ] && echo \" (\$branch)\")\[\e[0m\] ➜ "
+PS1="\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\[\e[35m\]\$(branch=\$(git symbolic-ref --short HEAD 2>/dev/null); [ -n \"\$branch\" ] && echo \" (\$branch)\")\[\e[0m\] \n\[\e[32m\]>\[\e[0m\] "
 
 alias vim="nvim";
 bind '"\C-f": "/usr/local/bin/tmux-sessionizer\n"'
