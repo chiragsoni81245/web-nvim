@@ -98,6 +98,21 @@ RUN ./.local/bin/mise install && \
     mkdir -p ./.local/share/bash-completion/completions && \
     ./.local/bin/mise completion bash --include-bash-completion-lib > ./.local/share/bash-completion/completions/mise
 
+#### -------------------------------------
+#### Install Claude Code
+#### -------------------------------------
+RUN curl -fsSL https://claude.ai/install.sh | bash && \
+    mkdir -p ./.claude && \
+
+RUN cat <<'EOF' > ./.claude/settings.json
+{
+  "env": {
+    "USE_BUILTIN_RIPGREP": "0",
+    "DISABLE_AUTOUPDATER": "1"
+  }
+}
+EOF
+
 
 #### -------------------------------------
 #### Gotty setup
