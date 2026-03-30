@@ -102,7 +102,7 @@ RUN ./.local/bin/mise install && \
 #### Install Claude Code
 #### -------------------------------------
 RUN curl -fsSL https://claude.ai/install.sh | bash && \
-    mkdir -p ./.claude && \
+    mkdir -p ./.claude
 
 RUN cat <<'EOF' > ./.claude/settings.json
 {
