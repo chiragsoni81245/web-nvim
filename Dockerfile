@@ -5,7 +5,7 @@ FROM ubuntu:latest
 #### -------------------------------------
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
-        git wget sudo curl unzip zip tar make tree \
+        git wget sudo curl unzip zip tar make tree locales \
         python3-venv \
         lsb-release software-properties-common gnupg
 
@@ -145,6 +145,9 @@ preferences {
 }
 EOF
 ENV TERM=xterm-256color
+ENV COLORTERM=truecolor
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 
 #### -------------------------------------
@@ -168,6 +171,10 @@ eval "$(~/.local/bin/mise activate bash)"
 export PATH=/opt/cmake-3.31.6/bin:$PATH
 export VCPKG_ROOT=~/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
+export TERM=xterm-256color
+export COLORTERM=truecolor
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
