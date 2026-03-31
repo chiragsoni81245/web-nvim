@@ -108,7 +108,9 @@ RUN cat <<'EOF' > ./.claude/settings.json
 {
   "env": {
     "USE_BUILTIN_RIPGREP": "0",
-    "DISABLE_AUTOUPDATER": "1"
+    "DISABLE_AUTOUPDATER": "1",
+    "DISABLE_TELEMETRY": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
   }
 }
 EOF
