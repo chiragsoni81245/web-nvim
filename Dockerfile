@@ -7,8 +7,14 @@ RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
         git wget sudo curl unzip zip tar make tree locales \
         python3-venv \
-        lsb-release software-properties-common gnupg
+        lsb-release software-properties-common gnupg && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
+ENV TERM=xterm-256color
+ENV COLORTERM=truecolor
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # Add ubuntu user in sudoers
 RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -144,9 +150,6 @@ preferences {
     background_color = "rgb(16, 16, 32)"
 }
 EOF
-ENV TERM=xterm-256color
-ENV COLORTERM=truecolor
-
 
 #### -------------------------------------
 #### Configure bashrc
@@ -169,8 +172,6 @@ eval "$(~/.local/bin/mise activate bash)"
 export PATH=/opt/cmake-3.31.6/bin:$PATH
 export VCPKG_ROOT=~/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
-export TERM=xterm-256color
-export COLORTERM=truecolor
 EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
