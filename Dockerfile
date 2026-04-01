@@ -146,8 +146,6 @@ preferences {
 EOF
 ENV TERM=xterm-256color
 ENV COLORTERM=truecolor
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
 
 
 #### -------------------------------------
@@ -173,8 +171,6 @@ export VCPKG_ROOT=~/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
 export TERM=xterm-256color
 export COLORTERM=truecolor
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
 EOF
 
 ENV PATH="/opt/nvim/bin:${PATH}"
